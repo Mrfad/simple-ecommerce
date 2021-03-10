@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href='{% static 'shop/styles.css' %}'>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <form class="card card-sm">
+                    <div class="card-body row no-gutters align-items-center">
+                        <div class="col">
+                            <input type="search" name='item_name' placeholder='Search for products' class='form-control form-control-borderless'>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-success" type='submit'>Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            {% for product in items %}
+                <div class="col-md-3">
+                    <div class="card">
+                        <img width="250" height="250" src="{{ product.image }}" class='card-img-top' class='form-control form-control-borderless'>
+                        <div class="card-body">
+                            <div class="card-title">
+                                {{product.title}}
+                            </div>
+                            <div class="card-text">
+                                $ {{product.price}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {{items.number}} page number<br/>
+        {{items.paginator.count}}<br/>
+        {{items.paginator.num_page}}<br/>
+        {{items.paginator.page_range}}--Range<br/>
+        <div class="row">
+            <div class="col-md offset-md-4">
+                    {% if items.has_previous %}
+                            <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+                            <a class="btn btn-outline-info mb-4" href="?page={{ items.previous_page_number }}">Previous</a>
+                    {% endif %}
+
+                    {% for num in items.paginator.page_range %}
+                        {% if items.number == num %}
+                            <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                        {% elif num > items.number|add:'-3' and num < items.number|add:'3' %}
+                            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if items.has_next %}
+                            <a class="btn btn-outline-info mb-4" href="?page={{ items.next_page_number }}">Next</a>
+                            <a class="btn btn-outline-info mb-4" href="?page={{ items.paginator.num_pages }}">Last</a>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
